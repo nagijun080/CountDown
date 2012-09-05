@@ -49,7 +49,7 @@ public class CountDown extends AppWidgetProvider {
 			int[] appWidgetIds) {
 		// TODO 自動生成されたメソッド・スタブ
 			Log.d("update","Updateの中");
-			RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.activity_main);
+			RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.widget_main);
 			
 			//呼び出したいActivityをセット
 			Intent intent = new Intent(context,MemorialDay.class);
@@ -57,8 +57,7 @@ public class CountDown extends AppWidgetProvider {
 			
 			//widgetのボタンクリックイベントに呼び出したいIntentを設定する
 			remoteViews.setOnClickPendingIntent(R.id.getUrl, pendingIntent);
-			
-			ComponentName widget = new ComponentName(context,CountDown.class);
+			Log.d("pendingIntent","pendingIntent");
 			appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
 			setAlarm(context);
 		}
