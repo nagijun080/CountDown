@@ -16,8 +16,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 public class Myservice extends Service {
   
@@ -87,7 +89,8 @@ public class Myservice extends Service {
 		//àÍÇÃà ÇÃï™êîÇminUnitDigitÇ…ï\é¶
 		remoteViews.setTextViewText(R.id.minUnitDigit, minUDSt);
 		
-		remoteViews.setTextViewText(R.id.textAnniversary, getText(R.string.release_first));
+		remoteViews.setTextViewText(R.id.textAnniversary, (getText(R.id.textView2)));
+		Log.d("R.id.textView2",getText(R.id.textView2).toString());
 		
 		
 		ComponentName thisWidget = new ComponentName(this, CountDown.class);
