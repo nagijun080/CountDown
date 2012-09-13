@@ -11,13 +11,18 @@
         android:layout_height="wrap_content"
         android:text="TextView" />
     
-    <TextView
-        android:id="@+id/textView2"
+    <EditText
+        android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="118dp"
         android:text="MemorialDay"
         android:textSize="30sp"
         tools:context=".Main" />
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="クリック" />
    
 </LinearLayout>

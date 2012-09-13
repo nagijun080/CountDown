@@ -29,6 +29,7 @@ public class Myservice extends Service {
 	public void onStart(Intent intent, int startId) {
 		// TODO 自動生成されたメソッド・スタブ
 		RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.widget_main);
+		RemoteViews views = new RemoteViews(getPackageName(),R.layout.activity_main);
 		
 		Calendar calendar = Calendar.getInstance();
 		Calendar countDown = Calendar.getInstance();
@@ -89,8 +90,8 @@ public class Myservice extends Service {
 		//一の位の分数をminUnitDigitに表示
 		remoteViews.setTextViewText(R.id.minUnitDigit, minUDSt);
 		
-		remoteViews.setTextViewText(R.id.textAnniversary, (getText(R.id.textView2)));
-		Log.d("R.id.textView2",getText(R.id.textView2).toString());
+		//remoteViews.setTextViewText(R.id.textAnniversary, ((views.getPackage().R.id.editText)));
+		
 		
 		
 		ComponentName thisWidget = new ComponentName(this, CountDown.class);

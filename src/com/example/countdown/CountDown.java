@@ -60,6 +60,13 @@ public class CountDown extends AppWidgetProvider {
 			Log.d("pendingIntent","pendingIntent");
 			appWidgetManager.updateAppWidget(appWidgetIds, remoteViews);
 			setAlarm(context);
+			
+			Intent inact = new Intent(context, Myservice.class);
+			PendingIntent pT = PendingIntent.getActivity(context, 0, inact, PendingIntent.FLAG_UPDATE_CURRENT);
+			RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.activity_main);
+			views.setOnClickPendingIntent(R.id.button, pT);
+			ComponentName widget = new ComponentName(context, Myservice.class);
+			appWidgetManager.updateAppWidget(widget, views);
 		}
 
 	private void setAlarm(Context context) {

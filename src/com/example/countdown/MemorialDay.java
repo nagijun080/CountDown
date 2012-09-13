@@ -7,15 +7,20 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 
-public class MemorialDay extends Activity {
+public class MemorialDay extends Activity implements OnClickListener{
 
-	private TextView textView1,textView2;
+	private TextView textView1;
+	private EditText editText;
+	private Button button;
 	private Integer year;
 	private Integer month;
 	private Integer day;
@@ -28,7 +33,8 @@ public class MemorialDay extends Activity {
         setContentView(R.layout.activity_main);
         
         textView1 = (TextView)findViewById(R.id.textView1);
-        textView2 = (TextView)findViewById(R.id.textView2);
+        editText = (EditText)findViewById(R.id.editText);
+        button = (Button)findViewById(R.id.button);
         
         textView1.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
@@ -41,11 +47,15 @@ public class MemorialDay extends Activity {
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);
         
+        button.setOnClickListener(this);
+        
+        
+        
         updateDisplay();
     }
     
     private void updateDisplay() {
-    	textView1.setText(new StringBuilder().append(year).append("年")
+    	((TextView)textView1).setText(new StringBuilder().append(year).append("年")
     			.append(month + 1).append("月").append(day).append("日"));
      }
 
@@ -75,4 +85,19 @@ public class MemorialDay extends Activity {
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
+
+	@Override
+	public void onClick(View v) {
+		// TODO 自動生成されたメソッド・スタブ
+		Intent widgetUpdate = new Intent("android.appwidget.action.APPWIDGET_UPDATE");
+		Bundle bundle = new Bundle();
+		bundle.putString("text", editText.getText().toString());
+		widgetUpdate.putExtras(bundle);
+		sendBroadcast(widgetUpdate);
+		
+		finish();
+		
+	}
+    
+    
 }
