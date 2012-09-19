@@ -67,6 +67,9 @@ public class CountDown extends AppWidgetProvider {
 			views.setOnClickPendingIntent(R.id.button, pT);
 			ComponentName widget = new ComponentName(context, Myservice.class);
 			appWidgetManager.updateAppWidget(widget, views);
+			
+			getDataBase(context);
+			
 		}
 
 	private void setAlarm(Context context) {
@@ -79,6 +82,9 @@ public class CountDown extends AppWidgetProvider {
 		am.set(AlarmManager.RTC, oneSecondAfter, operation);
 	}
 	
-	
+	public void getDataBase(Context context) {
+		AnniverDB anniDB = new AnniverDB(context);
+		
+	}
 
 }

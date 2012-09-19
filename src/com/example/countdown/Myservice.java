@@ -29,7 +29,6 @@ public class Myservice extends Service {
 	public void onStart(Intent intent, int startId) {
 		// TODO 自動生成されたメソッド・スタブ
 		RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.widget_main);
-		RemoteViews views = new RemoteViews(getPackageName(),R.layout.activity_main);
 		
 		Calendar calendar = Calendar.getInstance();
 		Calendar countDown = Calendar.getInstance();

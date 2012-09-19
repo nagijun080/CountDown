@@ -3,17 +3,21 @@ package com.example.countdown;
 import java.util.Calendar;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class MemorialDay extends Activity implements OnClickListener{
@@ -54,7 +58,14 @@ public class MemorialDay extends Activity implements OnClickListener{
         updateDisplay();
     }
     
-    private void updateDisplay() {
+    @Override
+	protected void onStop() {
+		// TODO 自動生成されたメソッド・スタブ
+		super.onStop();
+		this.save();
+	}
+
+	private void updateDisplay() {
     	((TextView)textView1).setText(new StringBuilder().append(year).append("年")
     			.append(month + 1).append("月").append(day).append("日"));
      }
@@ -79,7 +90,7 @@ public class MemorialDay extends Activity implements OnClickListener{
     		updateDisplay();
     	}
     };
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -98,6 +109,16 @@ public class MemorialDay extends Activity implements OnClickListener{
 		finish();
 		
 	}
-    
-    
+
+	public void save() {
+		EditText et = (EditText)findViewById(R.id.editText);
+		String text = et.getText().toString();
+		String sql = " insert into anniDB ( " + android.provider.BaseColumns._ID + " , anniText, year, month, day) " +
+				"values (" + 1 + "," + text + ", null,null,null);";
+
+		AnniverDB anniDB = new AnniverDB(this);
+		SQLiteDatabase db = anniDB.getWritableDatabase();
+		db.execSQL(sql);
+		
+	}
 }
