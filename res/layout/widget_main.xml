@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/getUrl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/mini_hd"
     android:orientation="vertical"
-    android:id="@+id/getUrl"
     tools:context=".MainActivity" >
     
      <LinearLayout
@@ -124,33 +124,13 @@
 
     <TextView
         android:id="@+id/textAnniversary"
-        android:layout_weight="3"
+        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:gravity="top|right"
         android:text="予定はありません。" 
         android:textColor="#ffffff"
-        android:textStyle="bold"/>
-    <TextView
-        android:id="@+id/AnniDay"
-        android:layout_weight="4"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:gravity="top|center"
-        android:text="00"
-        android:textColor="#ff0000"
-        android:textSize="20sp"
         android:textStyle="bold"/>
-    
-    <TextView
-        android:id="@+id/StDay"
-        android:layout_weight="5"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:gravity="top|left"
-        android:text="日"
-        android:textColor="#ffffff"
-        android:textStyle="bold" />
 
     </LinearLayout>
     

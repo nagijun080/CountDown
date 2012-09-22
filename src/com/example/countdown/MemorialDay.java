@@ -10,7 +10,9 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +22,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MemorialDay extends Activity implements OnClickListener{
+public class MemorialDay extends Activity{
 
 	private TextView textView1;
 	private EditText editText;
@@ -28,6 +30,7 @@ public class MemorialDay extends Activity implements OnClickListener{
 	private Integer year;
 	private Integer month;
 	private Integer day;
+	private Integer i = 0;
 	
 	private static final int DATE_DIALOG_ID = 0;
 	
@@ -38,9 +41,8 @@ public class MemorialDay extends Activity implements OnClickListener{
         
         textView1 = (TextView)findViewById(R.id.textView1);
         editText = (EditText)findViewById(R.id.editText);
-        button = (Button)findViewById(R.id.button);
         
-        textView1.setOnClickListener(new OnClickListener() {
+        /*textView1.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
         		showDialog(DATE_DIALOG_ID);
         	}
@@ -49,28 +51,33 @@ public class MemorialDay extends Activity implements OnClickListener{
         Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
-        day = c.get(Calendar.DAY_OF_MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);    
         
-        button.setOnClickListener(this);
-        
-        
-        
-        updateDisplay();
+        updateDisplay();*/
     }
     
     @Override
+	protected void onPause() {
+		// TODO 自動生成されたメソッド・スタブ
+		super.onPause();
+		Log.d("onPause()" ,"onPause()");
+		this.widgetSend();
+	}
+
+	@Override
 	protected void onStop() {
 		// TODO 自動生成されたメソッド・スタブ
 		super.onStop();
-		this.save();
+		Log.d("onStop()" ,"onStop()");
+		this.widgetSend();
 	}
 
-	private void updateDisplay() {
+	/*private void updateDisplay() {
     	((TextView)textView1).setText(new StringBuilder().append(year).append("年")
     			.append(month + 1).append("月").append(day).append("日"));
-     }
+     }*/
 
-    @Override
+   /* @Override
 	protected Dialog onCreateDialog(int id) {
 		// TODO 自動生成されたメソッド・スタブ
 		switch(id) {
@@ -89,7 +96,7 @@ public class MemorialDay extends Activity implements OnClickListener{
     		day = dayOfMonth;
     		updateDisplay();
     	}
-    };
+    };*/
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,7 +104,7 @@ public class MemorialDay extends Activity implements OnClickListener{
         return true;
     }
 
-	@Override
+	/*@Override
 	public void onClick(View v) {
 		// TODO 自動生成されたメソッド・スタブ
 		Intent widgetUpdate = new Intent("android.appwidget.action.APPWIDGET_UPDATE");
@@ -108,17 +115,34 @@ public class MemorialDay extends Activity implements OnClickListener{
 		
 		finish();
 		
-	}
+	} */
 
-	public void save() {
+	/*public void save() {
 		EditText et = (EditText)findViewById(R.id.editText);
 		String text = et.getText().toString();
-		String sql = " insert into anniDB ( " + android.provider.BaseColumns._ID + " , anniText, year, month, day) " +
-				"values (" + 1 + "," + text + ", null,null,null);";
+		String sql = " insert into anniDB ( id, anniText, year, month, day) " +
+				"values ( " + (i++) + "," + text + "," + year + "," + month + "," + day + ");";
 
 		AnniverDB anniDB = new AnniverDB(this);
 		SQLiteDatabase db = anniDB.getWritableDatabase();
-		db.execSQL(sql);
+		Log.d("MemorialDay.class--save()","save()"); 
+		try {
+            db.execSQL(sql);
+        } catch (SQLException e) {
+            Log.e("ERROR", e.toString());
+        }
+	}*/
+	
+	public void widgetSend() {
+		EditText et = (EditText)findViewById(R.id.editText);
 		
+		Intent widgetUpdate = new Intent("android.appwidget.action.APPWIDGET_UPDATE");
+		Bundle bundle = new Bundle();
+		bundle.putString("text" ,et.getText().toString());
+		widgetUpdate.putExtras(bundle);
+		sendBroadcast(widgetUpdate);
+		
+		finish();
 	}
+	
 }

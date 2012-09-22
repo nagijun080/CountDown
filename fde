@@ -1,0 +1,48 @@
+[33mcommit 34fbfd4962784a84f4d2c2c81466f36e8232bc1e[m
+Author: nagijun080 <jun0521.hikaru0531.sub.hakata@gmail.com>
+Date:   Thu Sep 20 04:00:12 2012 +0900
+
+    DB create but not move
+
+[33mcommit a922586caab058d59b65e01f65eaf8288dd9594b[m
+Author: ict <ict@R1-14.local>
+Date:   Thu Sep 13 22:10:19 2012 +0900
+
+    onClickメソッドの追加
+
+[33mcommit b7b34bc081b5ddc810d3ca966c25ac21d8e40774[m
+Author: ict <ict@R1-14.local>
+Date:   Tue Sep 11 22:00:07 2012 +0900
+
+    dejihari0910first
+
+[33mcommit 097c527032d0e823dbd0c8aec12f1eb3e5cc4c7a[m
+Merge: 219cf7e 82c55bb
+Author: nagijun080 <jun0521.hikaru0531.sub.hakata@gmail.com>
+Date:   Sat Sep 8 02:23:41 2012 +0900
+
+    home0907first
+
+[33mcommit 219cf7e2787aaf5caa95462363e0fa81be0e1bad[m
+Author: nagijun080 <jun0521.hikaru0531.sub.hakata@gmail.com>
+Date:   Sat Sep 8 02:13:49 2012 +0900
+
+    home0907first
+
+[33mcommit 82c55bb95054b57cc9a795458dde622744bf52ab[m
+Author: ict <ict@R1-14.local>
+Date:   Thu Sep 6 22:20:17 2012 +0900
+
+    デジハリ0906first
+
+[33mcommit 736657f0e2ad3fcc1e812552a4830858daf17ca7[m
+Author: nagijun080 <jun0521.hikaru0531.sub.hakata@gmail.com>
+Date:   Thu Sep 6 02:41:49 2012 +0900
+
+    home0905first
+
+[33mcommit 94ab880995e3e6876c2704853a9f48720ffb9a1a[m
+Author: nagijun080 <jun0521.hikaru0531.sub.hakata@gmail.com>
+Date:   Wed Sep 5 02:34:05 2012 +0900
+
+    first commit
