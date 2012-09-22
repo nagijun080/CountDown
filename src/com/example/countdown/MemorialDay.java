@@ -10,6 +10,7 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class MemorialDay extends Activity{
         textView1 = (TextView)findViewById(R.id.textView1);
         editText = (EditText)findViewById(R.id.editText);
         
+        editText.setText(getBundleText());
         /*textView1.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
         		showDialog(DATE_DIALOG_ID);
@@ -142,7 +144,21 @@ public class MemorialDay extends Activity{
 		widgetUpdate.putExtras(bundle);
 		sendBroadcast(widgetUpdate);
 		
+		setBundleText(et.getText().toString());
+		
 		finish();
+	}
+	
+	public void setBundleText(String text) {
+		SharedPreferences pref = getSharedPreferences("Memo", MODE_PRIVATE);
+		SharedPreferences.Editor editor = pref.edit();
+		editor.putString("memo" , text);
+		editor.commit();
+	}
+	
+	public String getBundleText() {
+		SharedPreferences pref = this.getSharedPreferences("Memo", MODE_PRIVATE);
+		return pref.getString("memo", "");
 	}
 	
 }
