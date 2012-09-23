@@ -9,6 +9,7 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.SQLException;
@@ -27,11 +28,9 @@ public class MemorialDay extends Activity{
 
 	private TextView textView1;
 	private EditText editText;
-	private Button button;
 	private Integer year;
 	private Integer month;
 	private Integer day;
-	private Integer i = 0;
 	
 	private static final int DATE_DIALOG_ID = 0;
 	
@@ -44,7 +43,8 @@ public class MemorialDay extends Activity{
         editText = (EditText)findViewById(R.id.editText);
         
         editText.setText(getBundleText());
-        /*textView1.setOnClickListener(new OnClickListener() {
+        
+        textView1.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
         		showDialog(DATE_DIALOG_ID);
         	}
@@ -55,7 +55,7 @@ public class MemorialDay extends Activity{
         month = c.get(Calendar.MONTH);
         day = c.get(Calendar.DAY_OF_MONTH);    
         
-        updateDisplay();*/
+        updateDisplay();
     }
     
     @Override
@@ -74,12 +74,12 @@ public class MemorialDay extends Activity{
 		this.widgetSend();
 	}
 
-	/*private void updateDisplay() {
+	private void updateDisplay() {
     	((TextView)textView1).setText(new StringBuilder().append(year).append("年")
     			.append(month + 1).append("月").append(day).append("日"));
-     }*/
+     }
 
-   /* @Override
+    @Override
 	protected Dialog onCreateDialog(int id) {
 		// TODO 自動生成されたメソッド・スタブ
 		switch(id) {
@@ -98,7 +98,7 @@ public class MemorialDay extends Activity{
     		day = dayOfMonth;
     		updateDisplay();
     	}
-    };*/
+    };
     
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,4 +161,15 @@ public class MemorialDay extends Activity{
 		return pref.getString("memo", "");
 	}
 	
+	public void setDateBase(Context context, String text) {
+		AnniverDB anniDB = new AnniverDB(context);
+		SQLiteDatabase sdb = anniDB.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("annitext", text);
+		values.put("year", year);
+		values.put("month", month);
+		values.put("day", day);
+		long id = sdb.insert("anniDB", null, values);
+		
+	}
 }

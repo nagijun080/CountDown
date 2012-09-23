@@ -58,8 +58,10 @@ public class CountDown extends AppWidgetProvider {
 		//呼び出したいActivityをセット
 		Intent intent = new Intent(context,MemorialDay.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+		
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.widget_main);
 		remoteViews.setOnClickPendingIntent(R.id.getUrl, pendingIntent);
+		
 		ComponentName widget = new ComponentName(context, CountDown.class);
 		appWidgetManager.updateAppWidget(widget, remoteViews);
 		//widgetのボタンクリックイベントに呼び出したいIntentを設定する
