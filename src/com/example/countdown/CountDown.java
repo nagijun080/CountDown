@@ -37,11 +37,11 @@ public class CountDown extends AppWidgetProvider {
 		// TODO 自動生成されたメソッド・スタブ
 		super.onReceive(context, intent);
 		//Log.d("onReceive","superのあと");
-		/*if (ACTION_START_MY_ALARM.equals(intent.getAction())) {
+		if (ACTION_START_MY_ALARM.equals(intent.getAction())) {
 			Intent serviceIntent = new Intent(context, Myservice.class);
 			context.startService(serviceIntent);
 		}
-		setAlarm(context);*/
+		setAlarm(context);
 	}
 
 	@Override
@@ -64,9 +64,6 @@ public class CountDown extends AppWidgetProvider {
 		
 		ComponentName widget = new ComponentName(context, CountDown.class);
 		appWidgetManager.updateAppWidget(widget, remoteViews);
-		//widgetのボタンクリックイベントに呼び出したいIntentを設定する
-		
-		//widgetの更新
 		
 		//setAlarm(context);
 		
@@ -79,7 +76,7 @@ public class CountDown extends AppWidgetProvider {
 		*/
 		}
 
-	/*private void setAlarm(Context context) {
+	private void setAlarm(Context context) {
 		Intent alarmIntent = new Intent(context, CountDown.class);
 		alarmIntent.setAction(ACTION_START_MY_ALARM);
 		PendingIntent operation = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
@@ -88,6 +85,6 @@ public class CountDown extends AppWidgetProvider {
 		long oneSecondAfter = now + interval - now % (interval);
 		am.set(AlarmManager.RTC, oneSecondAfter, operation);
 	}
-	*/
+	
 	
 }

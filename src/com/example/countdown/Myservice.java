@@ -47,7 +47,7 @@ public class Myservice extends Service {
 		filter.addAction("android.appwidget.action.APPWIDGET_UPDATE");
 		registerReceiver(b_Receiver, filter);
 		
-		/*RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.widget_main);
+		RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.widget_main);
 		Calendar calendar = Calendar.getInstance();
 		
 		//”N‚Ì‰Šú‰»
@@ -97,13 +97,13 @@ public class Myservice extends Service {
 		remoteViews.setTextViewText(R.id.minTenthsDigit, minTDSt);
 		//ˆê‚ÌˆÊ‚Ì•ª”‚ğminUnitDigit‚É•\¦
 		remoteViews.setTextViewText(R.id.minUnitDigit, minUDSt);
-		*/
+		
 		//remoteViews.setTextViewText(R.id.textAnniversary, ((views.getPackage().R.id.editText)));
 		
-		/*ComponentName thisWidget = new ComponentName(this, CountDown.class);
+		ComponentName thisWidget = new ComponentName(this, CountDown.class);
 		AppWidgetManager manager = AppWidgetManager.getInstance(this);
 		manager.updateAppWidget(thisWidget, remoteViews);
-*/	}
+	}
 
 	
 

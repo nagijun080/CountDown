@@ -169,6 +169,8 @@ public class MemorialDay extends Activity{
 		values.put("year", year);
 		values.put("month", month);
 		values.put("day", day);
+		Log.d("values.put",values.getAsString(text));
+		
 		long id = sdb.insert("anniDB", null, values);
 		
 	}
