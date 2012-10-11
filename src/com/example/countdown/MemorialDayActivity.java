@@ -63,7 +63,7 @@ public class MemorialDayActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO 自動生成されたメソッド・スタブ
-				setShowDiaEdText();
+				showDiaEdText();
 			}
 
         });
@@ -129,7 +129,7 @@ public class MemorialDayActivity extends Activity{
 	}
 	
 
-	private void setShowDiaEdText() {
+	private void showDiaEdText() {
 		// TODO 自動生成されたメソッド・スタブ
 		EditText edit = new EditText(this);
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_main);
