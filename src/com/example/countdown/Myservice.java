@@ -100,7 +100,7 @@ public class Myservice extends Service {
 		
 		//remoteViews.setTextViewText(R.id.textAnniversary, ((views.getPackage().R.id.editText)));
 		
-		ComponentName thisWidget = new ComponentName(this, CountDown.class);
+		ComponentName thisWidget = new ComponentName(this, CountDownWidget.class);
 		AppWidgetManager manager = AppWidgetManager.getInstance(this);
 		manager.updateAppWidget(thisWidget, remoteViews);
 	}
@@ -140,23 +140,13 @@ public class Myservice extends Service {
 			
 			remoteViews.setTextViewText(R.id.textAnniversary, msg_st);
 			
-			ComponentName thisWidget = new ComponentName(context, CountDown.class);
+			ComponentName thisWidget = new ComponentName(context, CountDownWidget.class);
 			AppWidgetManager manager = AppWidgetManager.getInstance(context);
 			manager.updateAppWidget(thisWidget, remoteViews);
 		}
 		
 	};
 	
-	/*public void getDataBase(Context context) {
-		RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.widget_main);
-		
-		AnniverDB anniDB = new AnniverDB(context);
-		SQLiteDatabase db = anniDB.getWritableDatabase();
-		String selection = "year = " + yearInt.toString() + " and month = " + dateMonth.toString() + " and day = " + dateDay.toString();
-		Cursor c = db.query("anniDB", new String[] { "anniText" }, selection,null,null,null,null);
-		Boolean bool = c.moveToFirst();
-		remoteViews.setTextViewText(R.id.textAnniversary, c.getString(0));
-		c.close();	
-	}*/
+	
 	
 }
