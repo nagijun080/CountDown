@@ -1,6 +1,8 @@
 package com.example.countdown;
 
 
+import java.util.Calendar;
+
 import com.example.countdown.R;
 
 import android.app.AlarmManager;
@@ -18,7 +20,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 
-public class CountDown extends AppWidgetProvider {
+public class CountDownWidget extends AppWidgetProvider {
 	
 	
 	private static final String ACTION_START_MY_ALARM =
@@ -56,16 +58,16 @@ public class CountDown extends AppWidgetProvider {
 		Log.d("update","Updateの中");
 		
 		//呼び出したいActivityをセット
-		Intent intent = new Intent(context,MemorialDay.class);
+		Intent intent = new Intent(context,MemorialDayActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 		
 		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.widget_main);
 		remoteViews.setOnClickPendingIntent(R.id.getUrl, pendingIntent);
 		
-		ComponentName widget = new ComponentName(context, CountDown.class);
+		ComponentName widget = new ComponentName(context, CountDownWidget.class);
 		appWidgetManager.updateAppWidget(widget, remoteViews);
 		
-		//setAlarm(context);
+		setAlarm(context);
 		
 		/*Intent inact = new Intent(context, Myservice.class);
 		PendingIntent pT = PendingIntent.getActivity(context, 0, inact, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -77,14 +79,35 @@ public class CountDown extends AppWidgetProvider {
 		}
 
 	private void setAlarm(Context context) {
-		Intent alarmIntent = new Intent(context, CountDown.class);
+		Intent alarmIntent = new Intent(context, CountDownWidget.class);
 		alarmIntent.setAction(ACTION_START_MY_ALARM);
 		PendingIntent operation = PendingIntent.getBroadcast(context, 0, alarmIntent, 0);
 		AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 		long now = System.currentTimeMillis() + 1;// + 1は確実に未来時刻になるようにする
 		long oneSecondAfter = now + interval - now % (interval);
 		am.set(AlarmManager.RTC, oneSecondAfter, operation);
+		
+		getDataBase(context);
 	}
 	
-	
+	public void getDataBase(Context context) {
+		RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.widget_main);
+		
+		Calendar calendar = Calendar.getInstance();
+		Integer yearInt = calendar.get(Calendar.YEAR);
+		Integer dateMonth = calendar.get(Calendar.MONTH) + 1;
+		Integer dateDay = calendar.get(Calendar.DATE);
+		
+		AnniverDB anniDB = new AnniverDB(context);
+		SQLiteDatabase db = anniDB.getWritableDatabase();
+		String ymdSt = yearInt.toString() + dateMonth.toString() + dateDay.toString();
+		String selection = "ymd = " + ymdSt;
+		Cursor c = db.query("anniDB", new String[] { "anniText", "ymd" }, selection,null,null,null,null);
+		Boolean bool = c.moveToFirst();
+		Log.d("c.moveToFirst", bool.toString());
+		while (bool) {
+			remoteViews.setTextViewText(R.id.textAnniversary, c.getString(0));
+		}
+		c.close();	
+	}
 }

@@ -9,8 +9,12 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,11 +24,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MemorialDay extends Activity implements OnClickListener{
+public class MemorialDay extends Activity{
 
 	private TextView textView1;
 	private EditText editText;
-	private Button button;
 	private Integer year;
 	private Integer month;
 	private Integer day;
@@ -38,7 +41,8 @@ public class MemorialDay extends Activity implements OnClickListener{
         
         textView1 = (TextView)findViewById(R.id.textView1);
         editText = (EditText)findViewById(R.id.editText);
-        button = (Button)findViewById(R.id.button);
+        
+        editText.setText(getBundleText());
         
         textView1.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
@@ -49,20 +53,25 @@ public class MemorialDay extends Activity implements OnClickListener{
         Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
-        day = c.get(Calendar.DAY_OF_MONTH);
-        
-        button.setOnClickListener(this);
-        
-        
+        day = c.get(Calendar.DAY_OF_MONTH);    
         
         updateDisplay();
     }
     
     @Override
+	protected void onPause() {
+		// TODO 自動生成されたメソッド・スタブ
+		super.onPause();
+		Log.d("onPause()" ,"onPause()");
+		this.widgetSend();
+	}
+
+	@Override
 	protected void onStop() {
 		// TODO 自動生成されたメソッド・スタブ
 		super.onStop();
-		this.save();
+		Log.d("onStop()" ,"onStop()");
+		this.widgetSend();
 	}
 
 	private void updateDisplay() {
@@ -97,7 +106,7 @@ public class MemorialDay extends Activity implements OnClickListener{
         return true;
     }
 
-	@Override
+	/*@Override
 	public void onClick(View v) {
 		// TODO 自動生成されたメソッド・スタブ
 		Intent widgetUpdate = new Intent("android.appwidget.action.APPWIDGET_UPDATE");
@@ -108,17 +117,61 @@ public class MemorialDay extends Activity implements OnClickListener{
 		
 		finish();
 		
-	}
+	} */
 
-	public void save() {
+	/*public void save() {
 		EditText et = (EditText)findViewById(R.id.editText);
 		String text = et.getText().toString();
-		String sql = " insert into anniDB ( " + android.provider.BaseColumns._ID + " , anniText, year, month, day) " +
-				"values (" + 1 + "," + text + ", null,null,null);";
+		String sql = " insert into anniDB ( id, anniText, year, month, day) " +
+				"values ( " + (i++) + "," + text + "," + year + "," + month + "," + day + ");";
 
 		AnniverDB anniDB = new AnniverDB(this);
 		SQLiteDatabase db = anniDB.getWritableDatabase();
-		db.execSQL(sql);
+		Log.d("MemorialDay.class--save()","save()"); 
+		try {
+            db.execSQL(sql);
+        } catch (SQLException e) {
+            Log.e("ERROR", e.toString());
+        }
+	}*/
+	
+	public void widgetSend() {
+		EditText et = (EditText)findViewById(R.id.editText);
+		
+		Intent widgetUpdate = new Intent("android.appwidget.action.APPWIDGET_UPDATE");
+		Bundle bundle = new Bundle();
+		bundle.putString("text" ,et.getText().toString());
+		widgetUpdate.putExtras(bundle);
+		sendBroadcast(widgetUpdate);
+		
+		setBundleText(et.getText().toString());
+		
+		finish();
+	}
+	
+	public void setBundleText(String text) {
+		SharedPreferences pref = getSharedPreferences("Memo", MODE_PRIVATE);
+		SharedPreferences.Editor editor = pref.edit();
+		editor.putString("memo" , text);
+		editor.commit();
+	}
+	
+	public String getBundleText() {
+		SharedPreferences pref = this.getSharedPreferences("Memo", MODE_PRIVATE);
+		return pref.getString("memo", "");
+	}
+	
+	public void setDateBase(Context context, String text) {
+		AnniverDB anniDB = new AnniverDB(context);
+		SQLiteDatabase sdb = anniDB.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put("annitext", text);
+		values.put("year", year);
+		values.put("month", month);
+		values.put("day", day);
+		Log.d("values.put",values.getAsString(text));
+		
+		long id = sdb.insert("anniDB", null, values);
 		
 	}
 }
