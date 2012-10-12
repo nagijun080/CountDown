@@ -73,23 +73,28 @@ public class MemorialDayActivity extends Activity{
 			@Override
 			public void onClick(View v) {
 				// TODO 自動生成されたメソッド・スタブ
-				setDateBase(text);
+				setDateBase();
 			}
         	
         });
         
         Calendar calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DATE);
+        Integer year = calendar.get(Calendar.YEAR);
+        Integer month = calendar.get(Calendar.MONTH) + 1;
+        Integer day = calendar.get(Calendar.DATE);
         
-        updateDisplay();
+        updateDisplay(year, month, day);
     }
     
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		// TODO 自動生成されたメソッド・スタブ
+		Calendar calendar = Calendar.getInstance();
+		Integer year = calendar.get(Calendar.YEAR);
+        Integer month = calendar.get(Calendar.MONTH) + 1;
+        Integer day = calendar.get(Calendar.DATE);
+		
 		switch(id) {
 		case DATE_DIALOG_ID:
 			return new DatePickerDialog(this, dateSetListener, year, month, day);			
@@ -101,39 +106,50 @@ public class MemorialDayActivity extends Activity{
 	private OnDateSetListener dateSetListener = new OnDateSetListener() {
     	@Override
     	public void onDateSet(DatePicker view, int selectYear, int monthOfYear, int dayOfMonth) {
-    		year = selectYear;
-    		month = monthOfYear;
-    		day = dayOfMonth;
-    		updateDisplay();
+    		Integer year = selectYear;
+    		Integer month = monthOfYear + 1;
+    		Integer day = dayOfMonth;
+    		updateDisplay(year, month, day);
     	}
     };
     
-    private void updateDisplay() {
-    	((TextView)textView1).setText(new StringBuilder().append(year).append("年")
-    			.append(month + 1).append("月").append(day).append("日"));
+    private void updateDisplay(Integer year, Integer month, Integer day) {
+    	TextView textView = new TextView(this);
+    	textView.setText(new StringBuilder().append(year).append("年")
+    			.append(month).append("月").append(day).append("日"));
      }
 
 
 	
-	public void setDateBase(String text) {
-		AnniverDB anniDB = new AnniverDB(this);
+	public void setDateBase() {
+		AnniverDB anniDB = new AnniverDB(getApplicationContext());
 		SQLiteDatabase sdb = anniDB.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		
-		ymdSt = String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+		text = editText.getText().toString();
+		ymdSt = String.valueOf(year) + String.valueOf(month) + String.valueOf(day); Log.d("setDateBase()-->ymdSt", ymdSt);
 		
-		values.put("annitext", text);
+		values.put("anniText", text);
 		values.put("ymd", ymdSt);
 		
-		long id = sdb.insert("anniDB", null, values);
+		sdb.insert("anniDB", null, values);
+		anniDB.close();
 	}
 	
 
 	private void setShowDiaEdText() {
 		// TODO 自動生成されたメソッド・スタブ
 		EditText edit = new EditText(this);
+		TextView text = new TextView(this);
+		text.setOnClickListener(new OnClickListener() {
+        	@Override
+        	public void onClick(View v) {
+        		showDialog(DATE_DIALOG_ID);
+        	}
+        });
+		
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_main);
-		showDialog(DATE_DIALOG_ID);
+		linearLayout.addView(text,createParam(MP, 100));
 		linearLayout.addView(edit, createParam(MP, 100));
 	}
 	

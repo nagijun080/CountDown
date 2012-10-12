@@ -41,11 +41,11 @@ public class Myservice extends Service {
 	@Override
 	public void onStart(Intent intent, int startId) {
 		// TODO 自動生成されたメソッド・スタブ
-		super.onStart(intent, startId);
-		
+		//super.onStart(intent, startId);
+		/*
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("android.appwidget.action.APPWIDGET_UPDATE");
-		registerReceiver(b_Receiver, filter);
+		registerReceiver(b_Receiver, filter);*/
 		
 		RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.widget_main);
 		Calendar calendar = Calendar.getInstance();
@@ -114,7 +114,7 @@ public class Myservice extends Service {
 		return null;
 	}
 	
-	public static BroadcastReceiver b_Receiver = new BroadcastReceiver() {
+	/*public static BroadcastReceiver b_Receiver = new BroadcastReceiver() {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -145,7 +145,7 @@ public class Myservice extends Service {
 			manager.updateAppWidget(thisWidget, remoteViews);
 		}
 		
-	};
+	};*/
 	
 	
 	

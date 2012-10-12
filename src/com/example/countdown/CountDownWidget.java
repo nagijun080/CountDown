@@ -68,15 +68,7 @@ public class CountDownWidget extends AppWidgetProvider {
 		appWidgetManager.updateAppWidget(widget, remoteViews);
 		
 		setAlarm(context);
-		
-		/*Intent inact = new Intent(context, Myservice.class);
-		PendingIntent pT = PendingIntent.getActivity(context, 0, inact, PendingIntent.FLAG_UPDATE_CURRENT);
-		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.activity_main);
-		views.setOnClickPendingIntent(R.id.button, pT);
-		ComponentName widget = new ComponentName(context, Myservice.class);
-		appWidgetManager.updateAppWidget(widget, views);
-		*/
-		}
+	}
 
 	private void setAlarm(Context context) {
 		Intent alarmIntent = new Intent(context, CountDownWidget.class);
@@ -95,19 +87,29 @@ public class CountDownWidget extends AppWidgetProvider {
 		
 		Calendar calendar = Calendar.getInstance();
 		Integer yearInt = calendar.get(Calendar.YEAR);
-		Integer dateMonth = calendar.get(Calendar.MONTH) + 1;
+		Integer dateMonth = calendar.get(Calendar.MONTH) + 1; //Log.d("dateMonth",dateMonth.toString());
 		Integer dateDay = calendar.get(Calendar.DATE);
 		
 		AnniverDB anniDB = new AnniverDB(context);
 		SQLiteDatabase db = anniDB.getWritableDatabase();
-		String ymdSt = yearInt.toString() + dateMonth.toString() + dateDay.toString();
+		
+		//ç°ì˙ÇÃì˙ïtÇï∂éöóÒÇ…íuÇ´ä∑Ç¶ÇƒåãçáÇ∑ÇÈ
+		String ymdSt = yearInt.toString() + dateMonth.toString() + dateDay.toString(); Log.d("ymdSt",ymdSt);
 		String selection = "ymd = " + ymdSt;
+		
 		Cursor c = db.query("anniDB", new String[] { "anniText", "ymd" }, selection,null,null,null,null);
 		Boolean bool = c.moveToFirst();
+		
+		Integer culmn = c.getColumnIndex("anniText");
+		
+		//log.d
 		Log.d("c.moveToFirst", bool.toString());
+		Log.d("c.getString(0)", c.getString(culmn));
+		
 		while (bool) {
-			remoteViews.setTextViewText(R.id.textAnniversary, c.getString(0));
+			remoteViews.setTextViewText(R.id.textAnniversary, c.getString(culmn));
 		}
-		c.close();	
+		anniDB.close();
+		c.close();
 	}
 }

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class AnniverDB extends SQLiteOpenHelper {
 	
-	public static final String name = "";
+	public static final String name = "anniver.db";
 	public static final CursorFactory factory = null;
 	public static final Integer version = 1;
 	
@@ -20,9 +20,8 @@ public class AnniverDB extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO 自動生成されたメソッド・スタブ
-		String sql = "create table anniDB ( " + android.provider.BaseColumns._ID +
-				" integer primary key autoincrement, anniText text, " +
-				"ymd String);";
+		String sql = "CREATE TABLE anniDB(key INTEGER PRIMARY KEY AUTOINCREMENT, anniText TEXT, " +
+				"ymd TEXT);";
 		db.execSQL(sql);
 
 	}
