@@ -3,7 +3,6 @@ package com.example.countdown;
 import java.util.Calendar;
 
 import android.os.Bundle;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -23,22 +22,28 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class MemorialDayActivity extends Activity{
 
-	private TextView textView1;
-	private EditText editText;
+	private static final int MAX_ITEM = 100;
 	private Button addButton;
 	private Button saveButton;
+	private TextView[] textView = new TextView[MAX_ITEM];
+	private EditText[] editText = new EditText[MAX_ITEM];
 	
-	private Integer year;
-	private Integer month;
-	private Integer day;
+	private Integer[] year = new Integer[MAX_ITEM];
+	private Integer[] month = new Integer[MAX_ITEM];
+	private Integer[] day = new Integer[MAX_ITEM];
+	//TextView配列とEidtText配列の長さを格納
+	private Integer maxId = 0;
+	private Integer nowId;
+	
+	
 	private String text;
 	private String ymdSt;
 	
-	private static final int DATE_DIALOG_ID = 0;
 	private final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
 	
     @Override
@@ -46,24 +51,42 @@ public class MemorialDayActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        textView1 = (TextView)findViewById(R.id.textView1);
-        editText = (EditText)findViewById(R.id.editText);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.save_layout);
+        textView[maxId] = new TextView(this);
+        editText[maxId] = new EditText(this);
+        textView[maxId].setId(maxId);
+        editText[maxId].setId(maxId);
+        
+        linearLayout.addView(textView[maxId],createParam(MP, 100));
+        linearLayout.addView(editText[maxId], createParam(MP, 100));
+        
+        
+        Calendar calendar = Calendar.getInstance();
+        year[maxId] = calendar.get(Calendar.YEAR);
+        month[maxId] = calendar.get(Calendar.MONTH) + 1;
+        day[maxId] = calendar.get(Calendar.DATE);
+        
+        updateDisplay(maxId, year[maxId], month[maxId], day[maxId]);
+        
         addButton = (Button)findViewById(R.id.button1);
         saveButton = (Button)findViewById(R.id.saveButton);
         
-        textView1.setOnClickListener(new OnClickListener() {
+        textView[maxId].setOnClickListener(new OnClickListener() {
         	@Override
         	public void onClick(View v) {
-        		showDialog(DATE_DIALOG_ID);
+        		nowId = v.getId();
+        		showDialog(v.getId());
         	}
         });
         
+        //クリックされたらTextViewとEditTextがnewされる
         addButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO 自動生成されたメソッド・スタブ
-				setShowDiaEdText();
+				newEditText();
+				showEditText();
 			}
 
         });
@@ -77,45 +100,36 @@ public class MemorialDayActivity extends Activity{
 			}
         	
         });
-        
-        Calendar calendar = Calendar.getInstance();
-        Integer year = calendar.get(Calendar.YEAR);
-        Integer month = calendar.get(Calendar.MONTH) + 1;
-        Integer day = calendar.get(Calendar.DATE);
-        
-        updateDisplay(year, month, day);
+       
     }
     
-
+    
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		// TODO 自動生成されたメソッド・スタブ
 		Calendar calendar = Calendar.getInstance();
-		Integer year = calendar.get(Calendar.YEAR);
-        Integer month = calendar.get(Calendar.MONTH) + 1;
-        Integer day = calendar.get(Calendar.DATE);
+		year[id] = calendar.get(Calendar.YEAR);
+        month[id] = calendar.get(Calendar.MONTH) + 1;
+        day[id] = calendar.get(Calendar.DATE);
 		
-		switch(id) {
-		case DATE_DIALOG_ID:
-			return new DatePickerDialog(this, dateSetListener, year, month, day);			
-		}
-		return null;
+        Log.d("onCreateDialog-->", String.valueOf(id));	
+		return new DatePickerDialog(this, dateSetListener, year[id], month[id], day[id]);
     }
     
    
 	private OnDateSetListener dateSetListener = new OnDateSetListener() {
-    	@Override
+    	//設定を押したあとの処理
+		@Override
     	public void onDateSet(DatePicker view, int selectYear, int monthOfYear, int dayOfMonth) {
-    		Integer year = selectYear;
-    		Integer month = monthOfYear + 1;
-    		Integer day = dayOfMonth;
-    		updateDisplay(year, month, day);
+    		year[nowId] = selectYear;
+    		month[nowId] = monthOfYear + 1;
+    		day[nowId] = dayOfMonth;
+    		updateDisplay(nowId,year[nowId], month[nowId], day[nowId]);
     	}
     };
     
-    private void updateDisplay(Integer year, Integer month, Integer day) {
-    	TextView textView = new TextView(this);
-    	textView.setText(new StringBuilder().append(year).append("年")
+    private void updateDisplay(Integer id,Integer year, Integer month, Integer day) {
+    	textView[id].setText(new StringBuilder().append(year).append("年")
     			.append(month).append("月").append(day).append("日"));
      }
 
@@ -126,7 +140,7 @@ public class MemorialDayActivity extends Activity{
 		SQLiteDatabase sdb = anniDB.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		
-		text = editText.getText().toString();
+		text = editText[maxId].getText().toString();
 		ymdSt = String.valueOf(year) + String.valueOf(month) + String.valueOf(day); Log.d("setDateBase()-->ymdSt", ymdSt);
 		
 		values.put("anniText", text);
@@ -136,21 +150,40 @@ public class MemorialDayActivity extends Activity{
 		anniDB.close();
 	}
 	
-
-	private void setShowDiaEdText() {
+	//addButtonを押したときの処理 maxId++されてる
+	/* new EditText
+	 * new TextView*/
+	private void newEditText() {
 		// TODO 自動生成されたメソッド・スタブ
-		EditText edit = new EditText(this);
-		TextView text = new TextView(this);
-		text.setOnClickListener(new OnClickListener() {
+		maxId++;
+	
+		textView[maxId] = new TextView(this);
+		editText[maxId] = new EditText(this);
+		editText[maxId].setId(maxId);
+		textView[maxId].setId(maxId);
+		
+		textView[maxId].setOnClickListener(new OnClickListener() {
         	@Override
         	public void onClick(View v) {
-        		showDialog(DATE_DIALOG_ID);
+        		nowId = v.getId();
+        		showDialog(v.getId());
         	}
         });
 		
-		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.activity_main);
-		linearLayout.addView(text,createParam(MP, 100));
-		linearLayout.addView(edit, createParam(MP, 100));
+	}
+	
+	private void showEditText() {
+
+		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.save_layout);
+		linearLayout.addView(textView[maxId],createParam(MP, 100));
+		linearLayout.addView(editText[maxId], createParam(MP, 100));
+		
+		Calendar calendar = Calendar.getInstance();
+        year[maxId] = calendar.get(Calendar.YEAR);
+        month[maxId] = calendar.get(Calendar.MONTH) + 1;
+        day[maxId] = calendar.get(Calendar.DATE);
+        
+        updateDisplay(maxId,year[maxId], month[maxId], day[maxId]);
 	}
 	
 	 private LinearLayout.LayoutParams createParam(int w, int h){
