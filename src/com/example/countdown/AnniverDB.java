@@ -20,7 +20,7 @@ public class AnniverDB extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO 自動生成されたメソッド・スタブ
-		String sql = "CREATE TABLE anniDB(key INTEGER PRIMARY KEY AUTOINCREMENT, anniText TEXT, " +
+		String sql = "CREATE TABLE anniDB(KEY INTEGER PRIMARY KEY AUTOINCREMENT, key INTEGER, anniText TEXT, " +
 				"ymd TEXT);";
 		db.execSQL(sql);
 

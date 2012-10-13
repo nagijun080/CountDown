@@ -24,10 +24,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MemorialDayActivity extends Activity{
 
 	private static final int MAX_ITEM = 100;
+	private static final float TEXTSIZE = 23.0f;
+	
 	private Button addButton;
 	private Button saveButton;
 	private TextView[] textView = new TextView[MAX_ITEM];
@@ -36,13 +39,10 @@ public class MemorialDayActivity extends Activity{
 	private Integer[] year = new Integer[MAX_ITEM];
 	private Integer[] month = new Integer[MAX_ITEM];
 	private Integer[] day = new Integer[MAX_ITEM];
-	//TextView配列とEidtText配列の長さを格納
+	//TextViewとEditTextをnewした回数
 	private Integer maxId = 0;
+	//今使っている配列の添字
 	private Integer nowId;
-	
-	
-	private String text;
-	private String ymdSt;
 	
 	private final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
 	
@@ -56,8 +56,9 @@ public class MemorialDayActivity extends Activity{
         editText[maxId] = new EditText(this);
         textView[maxId].setId(maxId);
         editText[maxId].setId(maxId);
+        textView[maxId].setTextSize(TEXTSIZE);
         
-        linearLayout.addView(textView[maxId],createParam(MP, 100));
+        linearLayout.addView(textView[maxId],createParam(MP, 80));
         linearLayout.addView(editText[maxId], createParam(MP, 100));
         
         
@@ -109,10 +110,10 @@ public class MemorialDayActivity extends Activity{
 		// TODO 自動生成されたメソッド・スタブ
 		Calendar calendar = Calendar.getInstance();
 		year[id] = calendar.get(Calendar.YEAR);
-        month[id] = calendar.get(Calendar.MONTH) + 1;
+        month[id] = calendar.get(Calendar.MONTH);
         day[id] = calendar.get(Calendar.DATE);
-		
-        Log.d("onCreateDialog-->", String.valueOf(id));	
+		//Log.d
+        Log.d("onCreateDialog-->id", String.valueOf(id));	
 		return new DatePickerDialog(this, dateSetListener, year[id], month[id], day[id]);
     }
     
@@ -139,19 +140,45 @@ public class MemorialDayActivity extends Activity{
 		AnniverDB anniDB = new AnniverDB(getApplicationContext());
 		SQLiteDatabase sdb = anniDB.getWritableDatabase();
 		ContentValues values = new ContentValues();
+		//Log.d
+		Log.d("setDateBase()-->maxId",maxId.toString());
+		Integer[] key = new Integer[maxId];
+		String[] text = new String[maxId];
+		String[] ymd = new String[maxId];
 		
-		text = editText[maxId].getText().toString();
-		ymdSt = String.valueOf(year) + String.valueOf(month) + String.valueOf(day); Log.d("setDateBase()-->ymdSt", ymdSt);
+		long ret = 0;
 		
-		values.put("anniText", text);
-		values.put("ymd", ymdSt);
-		
-		sdb.insert("anniDB", null, values);
+		for (int i = 0;i < maxId;i++) {
+			key[i] = i;
+			text[i] = editText[i].getText().toString();
+			ymd[i] = String.valueOf(year[i]) + String.valueOf(month[i]) + String.valueOf(day[i]); 
+			//Log.d
+			Log.d("setDateBase()-->ymd", ymd[i]);
+			
+			values.put("key", key[i]);
+			values.put("anniText", text[i]);
+			values.put("ymd", ymd[i]);
+			try {
+				ret = sdb.insertOrThrow("anniDB", null, values);
+			} catch (SQLException e) {
+				ret = (long)sdb.update("anniDB", values, "key = " + key[i], null);
+			}
+				//log.d
+			Log.d("sdb.insert()-->",String.valueOf(sdb.insert("anniDB", null, values)));
+		}
 		anniDB.close();
+		if (ret == -1) {
+			Toast toast = Toast.makeText(this, "保存できませんでした。", 1000);
+			toast.show();
+		} else { 
+			Toast toast = Toast.makeText(this, "保存されました。", 1000);
+			toast.show();
+		}
 	}
 	
-	//addButtonを押したときの処理 maxId++されてる
-	/* new EditText
+	//addButtonを押したときの処理
+	/* maxId + 1
+	 * new EditText
 	 * new TextView*/
 	private void newEditText() {
 		// TODO 自動生成されたメソッド・スタブ
@@ -161,6 +188,7 @@ public class MemorialDayActivity extends Activity{
 		editText[maxId] = new EditText(this);
 		editText[maxId].setId(maxId);
 		textView[maxId].setId(maxId);
+        textView[maxId].setTextSize(TEXTSIZE);
 		
 		textView[maxId].setOnClickListener(new OnClickListener() {
         	@Override
@@ -175,7 +203,7 @@ public class MemorialDayActivity extends Activity{
 	private void showEditText() {
 
 		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.save_layout);
-		linearLayout.addView(textView[maxId],createParam(MP, 100));
+		linearLayout.addView(textView[maxId],createParam(MP, 80));
 		linearLayout.addView(editText[maxId], createParam(MP, 100));
 		
 		Calendar calendar = Calendar.getInstance();
