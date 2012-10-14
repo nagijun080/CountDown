@@ -138,35 +138,36 @@ public class MemorialDayActivity extends Activity{
 	
 	public void setDateBase() {
 		AnniverDB anniDB = new AnniverDB(getApplicationContext());
-		SQLiteDatabase sdb = anniDB.getWritableDatabase();
-		ContentValues values = new ContentValues();
+		
 		//Log.d
 		Log.d("setDateBase()-->maxId",maxId.toString());
-		Integer[] key = new Integer[maxId];
-		String[] text = new String[maxId];
-		String[] ymd = new String[maxId];
+		Integer[] key = new Integer[maxId+1];
+		String[] text = new String[maxId+1];
+		String[] ymd = new String[maxId+1];
 		
 		long ret = 0;
 		
-		for (int i = 0;i < maxId;i++) {
-			key[i] = i;
+		for (int i = 0;i < (maxId + 1);i++) {
+			SQLiteDatabase sdb = anniDB.getWritableDatabase();
+			ContentValues values = new ContentValues();
+			key[i] = i + 1;
 			text[i] = editText[i].getText().toString();
 			ymd[i] = String.valueOf(year[i]) + String.valueOf(month[i]) + String.valueOf(day[i]); 
 			//Log.d
-			Log.d("setDateBase()-->ymd", ymd[i]);
-			
-			values.put("key", key[i]);
-			values.put("anniText", text[i]);
-			values.put("ymd", ymd[i]);
-			try {
-				ret = sdb.insertOrThrow("anniDB", null, values);
-			} catch (SQLException e) {
+			Log.d("setDateBase()-->ymd["+String.valueOf(i)+"]", ymd[i]);
+			Log.d("setDateBase()-->text["+String.valueOf(i)+"]", text[i]);
+			/*if (ret != -1) { */
+				ret = anniDB.insert(sdb, text[i], ymd[i]);
+				//Log.d
+				Log.d("sdb.update()-->", String.valueOf(anniDB.insert(sdb, text[i], ymd[i])));
+			/*} else {
 				ret = (long)sdb.update("anniDB", values, "key = " + key[i], null);
-			}
-				//log.d
-			Log.d("sdb.insert()-->",String.valueOf(sdb.insert("anniDB", null, values)));
+				//Log.d
+				Log.d("sdb.update()-->", String.valueOf(sdb.update("anniDB", values, "key = " + key[i], null)));
+			}*/
+			anniDB.close();
 		}
-		anniDB.close();
+		
 		if (ret == -1) {
 			Toast toast = Toast.makeText(this, "ï€ë∂Ç≈Ç´Ç‹ÇπÇÒÇ≈ÇµÇΩÅB", 1000);
 			toast.show();

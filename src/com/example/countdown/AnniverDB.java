@@ -1,9 +1,11 @@
 package com.example.countdown;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class AnniverDB extends SQLiteOpenHelper {
 	
@@ -20,8 +22,8 @@ public class AnniverDB extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO 自動生成されたメソッド・スタブ
-		String sql = "CREATE TABLE anniDB(KEY INTEGER PRIMARY KEY AUTOINCREMENT, key INTEGER, anniText TEXT, " +
-				"ymd TEXT);";
+		String sql = "CREATE TABLE anniDB(key INTEGER PRIMARY KEY AUTOINCREMENT, anniText TEXT NOT NULL, " +
+				"ymd TEXT UNIQUE);";
 		db.execSQL(sql);
 
 	}
@@ -30,6 +32,14 @@ public class AnniverDB extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO 自動生成されたメソッド・スタブ
 
+	}
+	
+	public long insert(SQLiteDatabase db, String text, String ymd) {
+		ContentValues cv = new ContentValues();
+		cv.put("anniText", text);
+		cv.put("ymd", ymd);
+		return db.insert("anniDB", null, cv);
+		
 	}
 
 }
