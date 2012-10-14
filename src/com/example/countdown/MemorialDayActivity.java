@@ -218,5 +218,4 @@ public class MemorialDayActivity extends Activity{
 	 private LinearLayout.LayoutParams createParam(int w, int h){
 	        return new LinearLayout.LayoutParams(w, h);
 	 }
-	
 }
